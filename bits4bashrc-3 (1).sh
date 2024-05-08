@@ -40,3 +40,36 @@ function run349 (){
         send-keys "tmux kill-session" \;
 }
 export -f run349
+
+
+function drone6() {
+  tmux new-session -d -s drone6
+
+  # Set the width and height ratios for the panes
+  WIDTH_RATIO="5:3:2"
+  HEIGHT_RATIO="7:3"
+
+  # Split the window vertically into two rows with the specified height ratio
+  tmux split-window -v -t drone6 -p $((100 * 3 / (7 + 3)))
+
+  # Split the top row horizontally into 3 panes with the specified width ratio
+  tmux select-pane -t drone6.0
+  tmux split-window -h -t drone6.0 -p $((100 * 3 / (5 + 3 + 2)))
+  tmux split-window -h -t drone6.1 -p $((100 * 2 / (3 + 2)))
+
+  # Split the bottom row horizontally into 3 panes with the specified width ratio
+  tmux select-pane -t drone6.3
+  tmux split-window -h -t drone6.3 -p $((100 * 3 / (5 + 3 + 2)))
+  tmux split-window -h -t drone6.4 -p $((100 * 2 / (3 + 2)))
+
+  # Paste commands into each pane execute some
+  tmux send-keys -t drone6.0 "sleep 5 && roslaunch /${catkin_ws_name}/launch/control.launch" Enter
+  tmux send-keys -t drone6.1 "sleep 10 && roslaunch qutas_lab_450 environment.launch" Enter
+  tmux send-keys -t drone6.2 "sleep 10 && rosrun depthai_publisher dai_publisher" Enter
+  tmux send-keys -t drone6.3 "sleep 15 && rosrun depthai_publisher aruco_subscriber" Enter
+  tmux send-keys -t drone6.4 ""
+  tmux send-keys -t drone6.5 "tmux kill-session"
+
+  # Attach to the tmux session
+  tmux attach-session -t drone6
+}
