@@ -73,3 +73,73 @@ function drone6() {
   # Attach to the tmux session
   tmux attach-session -t drone6
 }
+
+function drone6() {
+    echo "Starting Tmux session for EGB349 UAV control"
+    sleep 2
+    
+    # Create a new tmux session named 'drone'
+    tmux new-session -d -s drone
+
+    set -g mouse on
+    
+    # Create Horizontal Panes
+    tmux split-window -h -t drone:0
+    tmux select-pane -t drone:0.1
+    tmux split-window -h -t drone:0
+    tmux select-pane -t drone:0.2
+    tmux split-window -h -t drone:0
+
+    # Split Vertical in each column
+    tmux select-pane -t drone:0.0
+    tmux split-window -v -t drone:0
+    tmux split-window -v -t drone:0
+
+    tmux select-pane -t drone:0.3
+    tmux split-window -v -t drone:0
+    tmux split-window -v -t drone:0
+
+    tmux select-pane -t drone:0.6
+    tmux split-window -v -t drone:0
+    tmux split-window -v -t drone:0
+
+    tmux select-pane -t drone:0.9
+    tmux split-window -v -t drone:0
+    tmux split-window -v -t drone:0
+
+    # Let the Terminal's Populate
+    sleep 2
+
+    # Select the Panes and Send Keys
+    tmux select-pane -t drone:0.0
+    tmux send-keys "sleep 2 && roscore" Enter
+
+    tmux select-pane -t drone:0.1
+    tmux send-keys "sleep 5 && roslaunch /${catkin_ws_name}/launch/control.launch" Enter
+
+    tmux select-pane -t drone:0.2
+    tmux send-keys "sleep 10 && roslaunch qutas_lab_450 environment.launch" Enter
+
+    tmux select-pane -t drone:0.3
+    tmux send-keys "htop" Enter
+
+    tmux select-pane -t drone:0.4
+    tmux send-keys "sleep 10 && rosrun depthai_publisher dai_publisher" Enter
+
+    tmux select-pane -t drone:0.5
+    tmux send-keys "sleep 15 && rosrun depthai_publisher aruco_subscriber" Enter
+
+    tmux select-pane -t drone:0.6
+    tmux send-keys "rostopic echo /mavros/local_position/pose" Enter
+
+    tmux select-pane -t drone:0.9
+    tmux send-keys "rostopic echo /mavros/vision_position/pose" Enter
+
+    tmux select-pane -t drone:0.11
+    tmux send-keys "tmux kill-session"
+
+    # Attach to the session
+    tmux attach-session -t drone
+}
+
+export -f drone6
