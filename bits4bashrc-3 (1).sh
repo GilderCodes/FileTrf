@@ -80,7 +80,7 @@ function drone6() {
     # Create a new tmux session named 'drone'
     tmux new-session -d -s drone
 
-    set -g mouse on
+    tmux set-option -t drone set -g mouse on
     
     # Create Horizontal Panes
     tmux split-window -h -t drone:0
@@ -111,22 +111,22 @@ function drone6() {
 
     # Select the Panes and Send Keys
     tmux select-pane -t drone:0.0
-    tmux send-keys "sleep 2 && roscore" Enter
+    tmux send-keys "roscore" Enter
 
     tmux select-pane -t drone:0.1
-    tmux send-keys "sleep 5 && roslaunch /${catkin_ws_name}/launch/control.launch" Enter
+    tmux send-keys "sleep 10 && roslaunch /${catkin_ws_name}/launch/control.launch" Enter
 
     tmux select-pane -t drone:0.2
-    tmux send-keys "sleep 10 && roslaunch qutas_lab_450 environment.launch" Enter
+    tmux send-keys "sleep 20 && roslaunch qutas_lab_450 environment.launch" Enter
 
     tmux select-pane -t drone:0.3
     tmux send-keys "htop" Enter
 
     tmux select-pane -t drone:0.4
-    tmux send-keys "sleep 10 && rosrun depthai_publisher dai_publisher" Enter
+    tmux send-keys "sleep 5 && rosrun depthai_publisher dai_publisher" Enter
 
     tmux select-pane -t drone:0.5
-    tmux send-keys "sleep 15 && rosrun depthai_publisher aruco_subscriber" Enter
+    tmux send-keys "sleep 10 && rosrun depthai_publisher aruco_subscriber" Enter
 
     tmux select-pane -t drone:0.6
     tmux send-keys "rostopic echo /mavros/local_position/pose" Enter
