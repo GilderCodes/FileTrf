@@ -1,12 +1,11 @@
 
 # Here EGB349 bash.rc tools nice to have in every new terminal
-
+# Load the packages in the workspace, so the terminal session is aware of them.
 source /opt/ros/noetic/setup.bash # Sorce ros code, so the terminal knows where ROS is installed
-catkin_ws_name="catkin_ws"   # Name of the worspace, used as a variable later as ${catkin_ws_name}
+catkin_ws_name="catkin_ws"
+source ~/${catkin_ws_name}/devel/setup.bash    
 
-source ~/${catkin_ws_name}/devel/setup.bash    # Load the packages in the workspace, so the terminal session is aware of them and can find them with double tab. tab tab is the friend of your memory!
-
-# disros definition so we dont need to worrie about ros ip manual setting. 
+# Definition of disros function
 disros() {
   # Setup for distributed ROS
   export ROS_IP="$(hostname -I | cut -d' ' -f1)"
@@ -19,8 +18,8 @@ disros() {
   fi
 }
  
-# We run disros so each terminal knows by default it is on the master, (we can add the ip of the master if we are running this from GCS: disros 192.zzz.abc.123 )
-disros
+# Master terminal runs 'disros' and slave terminal runs 'disro MASTER_IP'
+# disros IP
 
 # Activate multiple terminals using the powerfull tmux, so a single terminal can do marbels!
 # There is a safety feature build-in that cause a "file not foud" error on the control.lauch, check the path (missing ~ at start), this file will connect UAV and Onboard computer, so be carefull. 
